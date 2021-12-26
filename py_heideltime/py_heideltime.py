@@ -22,6 +22,10 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
             raise SystemExit
 
         path, full_path = get_Path()
+        
+        print (f"Path: {path}")
+        print (f"full_path: {full_path}")
+        
         configProps(full_path)
 
         directory_name = tempfile.mkdtemp(dir = path) #folder where the text to be passed to heideltime will be stored
