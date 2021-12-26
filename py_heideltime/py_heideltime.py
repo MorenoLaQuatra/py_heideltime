@@ -13,7 +13,7 @@ from itertools import chain
 import tempfile
 import shutil
 
-def py_heideltime(text, language='English', date_granularity='full', document_type='news', document_creation_time='yyyy-mm-dd'):
+def py_heideltime(text, language='English', date_granularity='full', document_type='news', document_creation_time='yyyy-mm-dd', thread_num=None):
     try:
         processed_text=pre_process_text(text)
         result = verify_temporal_tagger(language, date_granularity, document_type)
@@ -22,7 +22,7 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
             raise SystemExit
 
         path, full_path = get_Path()       
-        configProps(full_path)
+        config_props_path = configProps(full_path, thread_num)
 
         directory_name = tempfile.mkdtemp(dir = path) #folder where the text to be passed to heideltime will be stored
         listOfFiles = create_txt_files(processed_text, directory_name) #list with the files path to be processed by heideltime
@@ -31,13 +31,13 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
 
         result = []
         if len(listOfFiles) == 1:
-            result_temp = exec_java_heideltime(listOfFiles[0], path, language, document_type, document_creation_time, date_granularity)
+            result_temp = exec_java_heideltime(listOfFiles[0], path, language, document_type, document_creation_time, date_granularity, config_props_path)
             result.append(result_temp)
         else:
             with Pool(processes=multiprocessing.cpu_count( )) as pool:
                 result = pool.starmap(exec_java_heideltime,
                                                   zip(listOfFiles, repeat(path), repeat(language),
-                                                      repeat(document_type), repeat(document_creation_time),repeat(date_granularity)))
+                                                      repeat(document_type), repeat(document_creation_time),repeat(date_granularity), repeat(config_props_path))
 
         heideltime_processing_time = time.time( ) - start_time
 
@@ -61,7 +61,7 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
         return [dates_results, new_text, tagged_text, ExecTimeDictionary]
     finally:
         shutil.rmtree(directory_name) #remove folder and files that were processed by heideltime
-        #os.remove('config.props')   #remove config.props files
+        os.remove(config_props_path)   #remove config.props files
 
 
 def create_txt_files(text, directory_name):
@@ -84,7 +84,7 @@ def create_txt_files(text, directory_name):
     return listOfFiles
 
 
-def exec_java_heideltime(filename, path, language, document_type, document_creation_time, date_granularity):
+def exec_java_heideltime(filename, path, language, document_type, document_creation_time, date_granularity, config_props_path):
     list_dates = []
     ExecTimeDictionary = {}
     match = re.findall('^\d{4}[-]\d{2}[-]\d{2}$', document_creation_time)
@@ -199,7 +199,7 @@ def pre_process_text(text):
     else:
         return text
 
-def configProps(full_path):
+def configProps(full_path, thread_num=None):
     conf = '''
         ################################
         ##           MAIN             ##
@@ -245,7 +245,8 @@ def configProps(full_path):
         # ...for type to process
         uimaVarTypeToProcess = Type
         '''
-    with open("config.props", "w+") as f:
+    with open("config.props." + str(thread_num), "w+") as f:
         f.truncate()
         f.write(conf)
         f.close()
+    return "config.props." + str(thread_num)
