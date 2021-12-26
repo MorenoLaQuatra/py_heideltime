@@ -21,11 +21,7 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
             print([])
             raise SystemExit
 
-        path, full_path = get_Path()
-        
-        print (f"Path: {path}")
-        print (f"full_path: {full_path}")
-        
+        path, full_path = get_Path()       
         configProps(full_path)
 
         directory_name = tempfile.mkdtemp(dir = path) #folder where the text to be passed to heideltime will be stored
@@ -65,7 +61,7 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
         return [dates_results, new_text, tagged_text, ExecTimeDictionary]
     finally:
         shutil.rmtree(directory_name) #remove folder and files that were processed by heideltime
-        os.remove('config.props')   #remove config.props files
+        #os.remove('config.props')   #remove config.props files
 
 
 def create_txt_files(text, directory_name):
