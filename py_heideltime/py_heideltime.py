@@ -37,7 +37,7 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
             with Pool(processes=multiprocessing.cpu_count( )) as pool:
                 result = pool.starmap(exec_java_heideltime,
                                                   zip(listOfFiles, repeat(path), repeat(language),
-                                                      repeat(document_type), repeat(document_creation_time),repeat(date_granularity), repeat(config_props_path))
+                                                      repeat(document_type), repeat(document_creation_time), repeat(date_granularity), repeat(config_props_path)))
 
         heideltime_processing_time = time.time( ) - start_time
 
