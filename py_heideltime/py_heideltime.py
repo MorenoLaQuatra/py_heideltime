@@ -61,7 +61,7 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
         return [dates_results, new_text, tagged_text, ExecTimeDictionary]
     finally:
         shutil.rmtree(directory_name) #remove folder and files that were processed by heideltime
-        os.remove('config.props')   #remove config.props files
+        #os.remove('config.props')   #remove config.props files
 
 
 def create_txt_files(text, directory_name):
