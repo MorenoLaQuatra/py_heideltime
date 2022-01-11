@@ -22,7 +22,7 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
             raise SystemExit
 
         path, full_path = get_Path()       
-        config_props_path = configProps(full_path, thread_num)
+        config_props_path = configPropsUpdated(full_path, thread_num)
 
         directory_name = tempfile.mkdtemp(dir = path) #folder where the text to be passed to heideltime will be stored
         listOfFiles = create_txt_files(processed_text, directory_name) #list with the files path to be processed by heideltime
@@ -242,6 +242,134 @@ def configProps(full_path, thread_num=None):
         uimaVarTime = Time
         # ...for temponym-consideration
         uimaVarTemponym = Temponym
+        # ...for type to process
+        uimaVarTypeToProcess = Type
+        '''
+    with open("config.props." + str(thread_num), "w+") as f:
+        f.truncate()
+        f.write(conf)
+        f.close()
+    return "config.props." + str(thread_num)
+
+def configPropsUpdated(full_path, thread_num=None):
+    conf = '''
+        ################################
+        ##           MAIN             ##
+        ################################
+        # Consideration of different timex3-types
+        # Date
+        considerDate = true
+        # Duration
+        considerDuration = true
+        # Set
+        considerSet = true
+        # Time
+        considerTime = true
+        # Temponyms (make sure you know what you do if you set this to "true")
+        considerTemponym = false
+        ###################################
+        # Path to TreeTagger home directory
+        ###################################
+        # Ensure there is no white space in path (try to escape white spaces)
+        treeTaggerHome = ''' + full_path + '''
+        # This one is only necessary if you want to process chinese documents.
+        chineseTokenizerPath = SET ME IN CONFIG.PROPS! (e.g., /home/jannik/treetagger/chinese-tokenizer)
+        config_path =
+        # DO NOT CHANGE THE FOLLOWING
+        ################################
+        # Relative path of type system in HeidelTime home directory
+        typeSystemHome = desc/type/HeidelTime_TypeSystem.xml
+        # Relative path of dkpro type system in HeidelTime home directory
+        typeSystemHome_DKPro = desc/type/DKPro_TypeSystem.xml
+        # Name of uima-context variables...
+        # ...for date-consideration
+        uimaVarDate = Date
+        # ...for duration-consideration
+        uimaVarDuration = Duration
+        # ...for language
+        uimaVarLanguage = Language
+        # ...for set-consideration
+        uimaVarSet = Set
+        # ...for time-consideration
+        uimaVarTime = Time
+        # ...for temponym-consideration
+        uimaVarTemponym = Temponym
+        # ...for type to process
+        uimaVarTypeToProcess = Type
+
+
+        ################################
+        ##           MAIN             ##
+        ################################
+        # Consideration of different timex3-types
+        # Date
+        considerDate = true
+
+        # Duration
+        considerDuration = true
+
+        # Set
+        considerSet = true
+
+        # Time
+        considerTime = true
+
+
+        ###################################
+        # Path to TreeTagger home directory
+        ###################################
+        # Ensure there is no white space in path (try to escape white spaces)
+        treeTaggerHome = ''' + full_path + '''
+        # This one is only necessary if you want to process chinese documents.
+        chineseTokenizerPath = SET ME IN CONFIG.PROPS!
+
+        ##################################
+        # paths to JVnTextPro model paths:
+        ##################################
+        sent_model_path = SET ME IN CONFIG.PROPS!
+        word_model_path = SET ME IN CONFIG.PROPS!
+        pos_model_path = SET ME IN CONFIG.PROPS!
+
+        #####################################################
+        # paths to Stanford POS Tagger model or config files:
+        #####################################################
+        model_path = english-bidirectional-distsim.tagger
+
+        # leave this unset if you do not need one
+        config_path = 
+
+        ########################################
+        ## paths to hunpos and its tagger files:
+        ########################################
+        hunpos_path = SET ME IN CONFIG.PROPS!
+        hunpos_model_name = SET ME IN CONFIG.PROPS!
+
+
+
+        # DO NOT CHANGE THE FOLLOWING
+        ################################
+        # Relative path of type system in HeidelTime home directory
+        typeSystemHome = desc/type/HeidelTime_TypeSystem.xml
+
+        # Relative path of dkpro type system in HeidelTime home directory
+        typeSystemHome_DKPro = desc/type/DKPro_TypeSystem.xml
+
+        # Name of uima-context variables...
+        # ...for date-consideration
+        uimaVarDate = Date
+
+        # ...for duration-consideration
+        uimaVarDuration = Duration
+
+        # ...for language
+        uimaVarLanguage = Language
+
+        # ...for set-consideration
+        uimaVarSet = Set
+
+        # ...for time-consideration
+        uimaVarTime = Time
+
         # ...for type to process
         uimaVarTypeToProcess = Type
         '''
