@@ -199,7 +199,7 @@ def pre_process_text(text):
     else:
         return text
 
-def configProps(full_path, thread_num=None):
+def configProps_2(full_path, thread_num=None):
     conf = '''
         ################################
         ##           MAIN             ##
