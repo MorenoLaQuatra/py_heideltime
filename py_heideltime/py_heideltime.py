@@ -22,7 +22,7 @@ def py_heideltime(text, language='English', date_granularity='full', document_ty
             raise SystemExit
 
         path, full_path = get_Path()       
-        config_props_path = configPropsUpdated(full_path, thread_num)
+        config_props_path = configProps(full_path, thread_num)
 
         directory_name = tempfile.mkdtemp(dir = path) #folder where the text to be passed to heideltime will be stored
         listOfFiles = create_txt_files(processed_text, directory_name) #list with the files path to be processed by heideltime
@@ -96,14 +96,12 @@ def exec_java_heideltime(filename, path, language, document_type, document_creat
         normalized_dates_list = []
         extractor_start_time = time.time()
         if document_creation_time == 'yyyy-mm-dd':
-            #java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar ' + document_type + ' -l ' + language + ' -c ' + config_props_path + ' ' + filename
-            java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar ' + config_props_path + ' ' + filename
+            java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar ' + document_type + ' -l ' + language + ' -c ' + config_props_path + ' ' + filename
+            #java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar ' + config_props_path + ' ' + filename
         else:
-            '''
             java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar  -dct ' + \
                                document_creation_time + ' -t ' + document_type + ' -l ' + language + ' -c ' + config_props_path + ' ' + filename
-            '''
-            java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar ' + config_props_path + ' ' + filename
+            #java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar ' + config_props_path + ' ' + filename
             # run java heideltime standalone version to get all dates
 
         # TimeML text from java output
@@ -203,7 +201,7 @@ def pre_process_text(text):
     else:
         return text
 
-def configProps_2(full_path, thread_num=None):
+def configProps(full_path, thread_num=None):
     conf = '''
         ################################
         ##           MAIN             ##
