@@ -8,7 +8,7 @@ setup(name='py_heideltime',
       url='https://github.com/JMendes1995/py_heideltime.git',
       packages=find_packages(),
       include_package_data=True,
-      py_modules=['py_heideltime'],
+      py_modules=['py_heideltime', 'py_heideltime_tilse'],
       install_requires='emoji',
       entry_points={
             'console_scripts': [

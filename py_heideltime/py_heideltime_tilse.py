@@ -13,7 +13,7 @@ from itertools import chain
 import tempfile
 import shutil
 
-def py_heideltime_tilse(text, language='English', date_granularity='full', document_type='news', document_creation_time='yyyy-mm-dd', thread_num=None):
+def py_heideltime(text, language='English', date_granularity='full', document_type='news', document_creation_time='yyyy-mm-dd', thread_num=None):
     try:
         processed_text=pre_process_text(text)
         result = verify_temporal_tagger(language, date_granularity, document_type)
