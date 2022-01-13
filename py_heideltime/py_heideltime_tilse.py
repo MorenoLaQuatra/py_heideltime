@@ -13,7 +13,7 @@ from itertools import chain
 import tempfile
 import shutil
 
-def py_heideltime(text, language='English', date_granularity='full', document_type='news', document_creation_time='yyyy-mm-dd', thread_num=None):
+def py_heideltime_tilse(text, language='English', date_granularity='full', document_type='news', document_creation_time='yyyy-mm-dd', thread_num=None):
     try:
         processed_text=pre_process_text(text)
         result = verify_temporal_tagger(language, date_granularity, document_type)
@@ -95,12 +95,15 @@ def exec_java_heideltime(filename, path, language, document_type, document_creat
 
         normalized_dates_list = []
         extractor_start_time = time.time()
-
         if document_creation_time == 'yyyy-mm-dd':
-            java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar ' + document_type + ' -l ' + language + ' -c ' + config_props_path + ' ' + filename
+            #java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar ' + document_type + ' -l ' + language + ' -c ' + config_props_path + ' ' + filename
+            java_command = "java -Dfile.encoding=UTF-8 -jar " + path + "/Heideltime/tilse/de.unihd.dbs.heideltime.standalone.jar " + filename + " -l " + language + " -t document_type " + " -c " + config_props_path
         else:
+            '''
             java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar  -dct ' + \
                                document_creation_time + ' -t ' + document_type + ' -l ' + language + ' -c ' + config_props_path + ' ' + filename
+            '''
+            java_command = "java -Dfile.encoding=UTF-8 -jar " + path + "/Heideltime/tilse/de.unihd.dbs.heideltime.standalone.jar " + filename + " -l " + language + " -dct " + str(date) + " -t document_type " + " -c " + config_props_path
             # run java heideltime standalone version to get all dates
 
         # TimeML text from java output
@@ -243,6 +246,89 @@ def configProps(full_path, thread_num=None):
         uimaVarTime = Time
         # ...for temponym-consideration
         uimaVarTemponym = Temponym
+        # ...for type to process
+        uimaVarTypeToProcess = Type
+        '''
+    with open("config.props." + str(thread_num), "w+") as f:
+        f.truncate()
+        f.write(conf)
+        f.close()
+    return "config.props." + str(thread_num)
+
+def configPropsUpdated(full_path, thread_num=None):
+    conf = '''
+        ################################
+        ##           MAIN             ##
+        ################################
+        # Consideration of different timex3-types
+        # Date
+        considerDate = true
+
+        # Duration
+        considerDuration = true
+
+        # Set
+        considerSet = true
+
+        # Time
+        considerTime = true
+
+
+        ###################################
+        # Path to TreeTagger home directory
+        ###################################
+        # Ensure there is no white space in path (try to escape white spaces)
+        treeTaggerHome = ''' + full_path + '''
+        # This one is only necessary if you want to process chinese documents.
+        chineseTokenizerPath = SET ME IN CONFIG.PROPS!
+
+        ##################################
+        # paths to JVnTextPro model paths:
+        ##################################
+        sent_model_path = SET ME IN CONFIG.PROPS!
+        word_model_path = SET ME IN CONFIG.PROPS!
+        pos_model_path = SET ME IN CONFIG.PROPS!
+
+        #####################################################
+        # paths to Stanford POS Tagger model or config files:
+        #####################################################
+        model_path = english-bidirectional-distsim.tagger
+
+        # leave this unset if you do not need one
+        config_path = 
+
+        ########################################
+        ## paths to hunpos and its tagger files:
+        ########################################
+        hunpos_path = SET ME IN CONFIG.PROPS!
+        hunpos_model_name = SET ME IN CONFIG.PROPS!
+
+
+
+        # DO NOT CHANGE THE FOLLOWING
+        ################################
+        # Relative path of type system in HeidelTime home directory
+        typeSystemHome = desc/type/HeidelTime_TypeSystem.xml
+
+        # Relative path of dkpro type system in HeidelTime home directory
+        typeSystemHome_DKPro = desc/type/DKPro_TypeSystem.xml
+
+        # Name of uima-context variables...
+        # ...for date-consideration
+        uimaVarDate = Date
+
+        # ...for duration-consideration
+        uimaVarDuration = Duration
+
+        # ...for language
+        uimaVarLanguage = Language
+
+        # ...for set-consideration
+        uimaVarSet = Set
+
+        # ...for time-consideration
+        uimaVarTime = Time
+
         # ...for type to process
         uimaVarTypeToProcess = Type
         '''
