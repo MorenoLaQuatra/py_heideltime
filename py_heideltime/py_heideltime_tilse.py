@@ -103,7 +103,7 @@ def exec_java_heideltime(filename, path, language, document_type, document_creat
             java_command = 'java -jar ' + path + '/Heideltime/de.unihd.dbs.heideltime.standalone.jar  -dct ' + \
                                document_creation_time + ' -t ' + document_type + ' -l ' + language + ' -c ' + config_props_path + ' ' + filename
             '''
-            java_command = "java -Dfile.encoding=UTF-8 -jar " + path + "/Heideltime/tilse/de.unihd.dbs.heideltime.standalone.jar " + filename + " -l " + language + " -dct " + str(date) + " -t document_type " + " -c " + config_props_path
+            java_command = "java -Dfile.encoding=UTF-8 -jar " + path + "/Heideltime/tilse/de.unihd.dbs.heideltime.standalone.jar " + filename + " -l " + language + " -dct " + str(document_creation_time) + " -t document_type " + " -c " + config_props_path
             # run java heideltime standalone version to get all dates
 
         # TimeML text from java output
