@@ -203,7 +203,7 @@ def pre_process_text(text):
     else:
         return text
 
-def configProps(full_path, thread_num=None):
+def configProps_old(full_path, thread_num=None):
     conf = '''
         ################################
         ##           MAIN             ##
@@ -255,7 +255,7 @@ def configProps(full_path, thread_num=None):
         f.close()
     return "config.props." + str(thread_num)
 
-def configPropsUpdated(full_path, thread_num=None):
+def configProps(full_path, thread_num=None):
     conf = '''
         ################################
         ##           MAIN             ##
